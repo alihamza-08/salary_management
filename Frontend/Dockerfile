@@ -12,7 +12,7 @@ WORKDIR /app
 COPY . .
 RUN npm install && npm run build
 
-# Step 2: Serve using a lightweight 
+# Step 2: Serve using a 
 FROM node:18 as runner
 WORKDIR /app
 RUN npm install -g serve
