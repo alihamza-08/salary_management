@@ -1,0 +1,15 @@
+# dependencies
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# production
+dist
+
+# system
+.DS_Store
+.env
+.vscode
+.git
