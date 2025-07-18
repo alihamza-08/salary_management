@@ -2,14 +2,18 @@ version: "3.8"
 
 services:
   frontend:
-    build: ./Frontend
+    build:
+      context: ./Frontend
     ports:
       - "80:3000"
+    environment:
+      - VITE_API_URL=http://localhost:5000
     depends_on:
       - backend
 
   backend:
-    build: ./Backend
+    build:
+      context: ./Backend
     ports:
       - "5000:5000"
     environment:
@@ -17,6 +21,8 @@ services:
       - DB_USER=root
       - DB_PASSWORD=yourpassword
       - DB_NAME=yourdbname
+      - APP_PORT=5000
+      - SESS_SECRET=yourSessionSecret
     depends_on:
       - db
 
