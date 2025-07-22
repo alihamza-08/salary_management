@@ -4,7 +4,7 @@ services:
   frontend:
     image: rajaali890/frontend:latest
     ports:
-      - "80:80"  # NGINX now serves on port 80 inside the container
+      - "80:80"  # NGINX now serves on port 80 inside
     depends_on:
       - backend
 
