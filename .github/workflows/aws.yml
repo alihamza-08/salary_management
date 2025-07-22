@@ -13,26 +13,22 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Login to Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Build and push frontend image
-      - name: Build and Push Frontend Docker Image
+      - name: Build and Push Frontend Docker Image (with NGINX)
         run: |
           docker build -t rajaali890/frontend:latest ./Frontend
           docker push rajaali890/frontend:latest
 
-      # Build and push backend image
       - name: Build and Push Backend Docker Image
         run: |
           docker build -t rajaali890/backend:latest ./Backend
           docker push rajaali890/backend:latest
 
-      # Copy docker-compose.yml to EC2 (optional but keeps things clean)
       - name: Copy docker-compose.yml to EC2
         uses: appleboy/scp-action@master
         with:
@@ -42,8 +38,7 @@ jobs:
           source: "docker-compose.yml"
           target: "~/app"
 
-      # SSH into EC2 and deploy
-      - name: SSH and Deploy on EC2
+      - name: SSH into EC2 and Deploy Containers
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}

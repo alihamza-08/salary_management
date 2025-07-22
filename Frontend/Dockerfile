@@ -1,26 +1,20 @@
-# # Frontend Dockerfile
-# FROM node:20-alpine
-# WORKDIR /app
-# COPY . .
-# RUN npm install
-# RUN npm run build
-# RUN npm install -g serve
-# CMD ["serve", "-s", "dist", "-l", "3000"]
-# Step 1: Build
-# Step 1: Build the React/Vite app
+# Step 1: Build the app
 FROM node:18 AS builder
 WORKDIR /app
 COPY . .
-
 ENV NODE_OPTIONS="--max-old-space-size=1024"
-
 RUN npm install && npm run build
 
-# Step 2: Serve using a simple HTTP server
-FROM node:18 AS runner
-WORKDIR /app
-RUN npm install -g serve
-COPY --from=builder /app/dist ./dist
-EXPOSE 3000
-CMD ["serve", "-s", "dist", "-l", "3000"]
+# Step 2: Use NGINX to serve the build
+FROM nginx:stable-alpine AS runner
+# Remove the default NGINX website
+RUN rm -rf /usr/share/nginx/html/*
 
+# Copy the build output to NGINX's HTML directory
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copy custom nginx config (optional if you want to customize routing)
+ COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
